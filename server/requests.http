@@ -1,0 +1,146 @@
+### Teste da API
+GET http://localhost:3000/
+
+###
+
+### Cadastro de Usuário
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "rada",
+  "email": "rada@gmail.com",
+  "password": "123456"
+}
+
+### Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "radagameplays@gmail.com",
+  "password": "123456"
+}
+
+### Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "radagameplays@gmail.com",
+  "password": "123456"
+}
+
+### Minha conta
+GET http://localhost:3000/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjA1OSwiZXhwIjoxNzgzMjcwODU5fQ.FsZpCOz5efz1cgjrGopOE1DG7_yonLukb7jzqJPQ23M 
+
+### Criar empresa
+POST http://localhost:3000/api/companies
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjM5MCwiZXhwIjoxNzgzMjcxMTkwfQ.9knWP7P-1sHawDSpxZHOplBCtC9HSHnCajwQTeW5Gpg
+
+{
+  "name": "FluxERP Teste",
+  "document": "00.000.000/0001-00",
+  "phone": "(74) 99999-9999",
+  "address": "Bahia"
+}
+
+### Listar minhas empresas
+GET http://localhost:3000/api/companies
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjM5MCwiZXhwIjoxNzgzMjcxMTkwfQ.9knWP7P-1sHawDSpxZHOplBCtC9HSHnCajwQTeW5Gpg
+
+### Criar produto
+POST http://localhost:3000/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjM5MCwiZXhwIjoxNzgzMjcxMTkwfQ.9knWP7P-1sHawDSpxZHOplBCtC9HSHnCajwQTeW5Gpg
+
+{
+  "company_id": 1,
+  "name": "Camiseta Básica",
+  "description": "Camiseta preta tamanho M",
+  "sku": "CAM-001",
+  "barcode": "789000000001",
+  "cost_price": 25.90,
+  "sale_price": 49.90,
+  "stock_quantity": 10,
+  "min_stock": 2
+}
+
+### Listar produtos
+GET http://localhost:3000/api/products?company_id=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjM5MCwiZXhwIjoxNzgzMjcxMTkwfQ.9knWP7P-1sHawDSpxZHOplBCtC9HSHnCajwQTeW5Gpg
+### Login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "radagameplays@gmail.com",
+  "password": "123456"
+}
+
+### Criar produto
+POST http://localhost:3000/api/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjY4NSwiZXhwIjoxNzgzMjcxNDg1fQ.JGN78Y33idO8oGc0nrPIDVxeAF9g4A5e-tgA6JG3twk
+
+{
+  "company_id": 1,
+  "name": "Camiseta Básica",
+  "description": "Camiseta preta tamanho M",
+  "sku": "CAM-001",
+  "barcode": "789000000001",
+  "cost_price": 25.90,
+  "sale_price": 49.90,
+  "stock_quantity": 10,
+  "min_stock": 2
+}
+
+### Listar produtos
+GET http://localhost:3000/api/products?company_id=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjY4NSwiZXhwIjoxNzgzMjcxNDg1fQ.JGN78Y33idO8oGc0nrPIDVxeAF9g4A5e-tgA6JG3twk
+
+### Criar cliente
+POST http://localhost:3000/api/customers
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjY4NSwiZXhwIjoxNzgzMjcxNDg1fQ.JGN78Y33idO8oGc0nrPIDVxeAF9g4A5e-tgA6JG3twk
+
+{
+  "company_id": 1,
+  "name": "João Cliente",
+  "email": "joao@email.com",
+  "phone": "(74) 99999-1111",
+  "document": "123.456.789-00",
+  "address": "Bahia"
+}
+
+### Listar clientes
+GET http://localhost:3000/api/customers?company_id=1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjY4NSwiZXhwIjoxNzgzMjcxNDg1fQ.JGN78Y33idO8oGc0nrPIDVxeAF9g4A5e-tgA6JG3twk
+
+### Buscar cliente por ID
+GET http://localhost:3000/api/customers/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjY4NSwiZXhwIjoxNzgzMjcxNDg1fQ.JGN78Y33idO8oGc0nrPIDVxeAF9g4A5e-tgA6JG3twk
+
+### Atualizar cliente
+PUT http://localhost:3000/api/customers/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJyYWRhZ2FtZXBsYXlzQGdtYWlsLmNvbSIsImlhdCI6MTc4MjY2NjY4NSwiZXhwIjoxNzgzMjcxNDg1fQ.JGN78Y33idO8oGc0nrPIDVxeAF9g4A5e-tgA6JG3twk
+
+{
+  "name": "João Cliente Atualizado",
+  "email": "joao.novo@email.com",
+  "phone": "(74) 98888-2222",
+  "document": "123.456.789-00",
+  "address": "Irecê - BA"
+}
+
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "radagameplays@gmail.com",
+  "password": "123456"
+}
+
