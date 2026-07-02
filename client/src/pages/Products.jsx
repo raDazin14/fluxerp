@@ -5,12 +5,14 @@ import "./Products.css";
 
 function Products() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null);
 
   const [form, setForm] = useState({
     name: "",
+    category_id: "",
     description: "",
     sku: "",
     barcode: "",
@@ -38,6 +40,7 @@ function Products() {
   function resetForm() {
     setForm({
       name: "",
+      category_id: "",
       description: "",
       sku: "",
       barcode: "",
@@ -66,6 +69,7 @@ function Products() {
 
     setForm({
       name: product.name || "",
+      category_id: product.category_id || "",
       description: product.description || "",
       sku: product.sku || "",
       barcode: product.barcode || "",
@@ -100,6 +104,22 @@ function Products() {
     }
   }
 
+  async function loadCategories() {
+    try {
+      const companyId = getCompanyId();
+
+      if (!companyId) {
+        setCategories([]);
+        return;
+      }
+
+      const response = await api.get(`/categories?company_id=${companyId}`);
+      setCategories(response.data);
+    } catch (error) {
+      console.error("Erro ao carregar categorias:", error);
+    }
+  }
+
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -111,12 +131,18 @@ function Products() {
         return;
       }
 
+      if (!form.name.trim()) {
+        showToast("error", "Informe o nome do produto.");
+        return;
+      }
+
       const payload = {
         company_id: Number(companyId),
-        name: form.name,
-        description: form.description,
-        sku: form.sku,
-        barcode: form.barcode,
+        category_id: form.category_id ? Number(form.category_id) : null,
+        name: form.name.trim(),
+        description: form.description.trim(),
+        sku: form.sku.trim(),
+        barcode: form.barcode.trim(),
         cost_price: Number(form.cost_price || 0),
         sale_price: Number(form.sale_price || 0),
         stock_quantity: Number(form.stock_quantity || 0),
@@ -171,10 +197,12 @@ function Products() {
 
   useEffect(() => {
     loadProducts();
+    loadCategories();
 
     function handleCompanyChanged() {
       closeModal();
       loadProducts();
+      loadCategories();
     }
 
     window.addEventListener("companyChanged", handleCompanyChanged);
@@ -190,7 +218,7 @@ function Products() {
         <div>
           <h1 className="page-title">Produtos</h1>
           <p className="page-subtitle">
-            Cadastre, visualize e acompanhe o estoque dos seus produtos.
+            Cadastre, visualize e organize seus produtos por categoria.
           </p>
         </div>
 
@@ -216,6 +244,7 @@ function Products() {
             <thead>
               <tr>
                 <th align="left">Produto</th>
+                <th align="left">Categoria</th>
                 <th align="left">SKU</th>
                 <th align="left">Venda</th>
                 <th align="left">Estoque</th>
@@ -234,6 +263,16 @@ function Products() {
                     </div>
                   </td>
 
+                  <td>
+                    {product.category_name ? (
+                      <span className="category-pill">
+                        {product.category_name}
+                      </span>
+                    ) : (
+                      <span className="category-empty">Sem categoria</span>
+                    )}
+                  </td>
+
                   <td>{product.sku || "-"}</td>
 
                   <td className="price">
@@ -244,9 +283,7 @@ function Products() {
                   </td>
 
                   <td>
-                    <span className="stock-pill">
-                      {product.stock_quantity}
-                    </span>
+                    <span className="stock-pill">{product.stock_quantity}</span>
                   </td>
 
                   <td>{product.min_stock}</td>
@@ -297,7 +334,7 @@ function Products() {
                   <div className="form-group">
                     <label>Nome</label>
                     <input
-                      placeholder="Ex: Camiseta básica"
+                      placeholder="Ex: Café arábica"
                       value={form.name}
                       onChange={(e) =>
                         setForm({ ...form, name: e.target.value })
@@ -305,10 +342,28 @@ function Products() {
                     />
                   </div>
 
+                  <div className="form-group">
+                    <label>Categoria</label>
+                    <select
+                      value={form.category_id}
+                      onChange={(e) =>
+                        setForm({ ...form, category_id: e.target.value })
+                      }
+                    >
+                      <option value="">Sem categoria</option>
+
+                      {categories.map((category) => (
+                        <option key={category.id} value={category.id}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
                   <div className="form-group full">
                     <label>Descrição</label>
                     <input
-                      placeholder="Ex: Camiseta preta tamanho M"
+                      placeholder="Ex: Café premium 250g"
                       value={form.description}
                       onChange={(e) =>
                         setForm({ ...form, description: e.target.value })
@@ -319,7 +374,7 @@ function Products() {
                   <div className="form-group">
                     <label>SKU</label>
                     <input
-                      placeholder="CAM-001"
+                      placeholder="CAF-001"
                       value={form.sku}
                       onChange={(e) =>
                         setForm({ ...form, sku: e.target.value })
