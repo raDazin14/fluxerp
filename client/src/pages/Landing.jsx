@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Activity, BarChart3 } from "lucide-react";
 import "./Landing.css";
 
 const whatsappLink =
@@ -6,22 +7,15 @@ const whatsappLink =
 
 function BrandLogo() {
   return (
-    <div className="landing-brand">
-      <div className="landing-brand-symbol">
-        <span></span>
-        <span></span>
-        <span></span>
-
-        <div className="landing-brand-bars">
-          <i></i>
-          <i></i>
-          <i></i>
-        </div>
+    <div className="brand-logo brand-logo-premium">
+      <div className="brand-symbol">
+        <Activity className="brand-main-icon" size={28} strokeWidth={2.8} />
+        <BarChart3 className="brand-mini-icon" size={15} strokeWidth={3} />
       </div>
 
-      <div className="landing-brand-text">
-        <strong>FluxERP</strong>
-        <small>Gestão inteligente</small>
+      <div className="brand-text">
+        <div className="brand-name">FluxERP</div>
+        <div className="brand-subtitle">Gestão inteligente</div>
       </div>
     </div>
   );

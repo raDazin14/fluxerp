@@ -1,6 +1,7 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
+  Activity,
   LayoutDashboard,
   Building2,
   Package,
@@ -12,24 +13,16 @@ import {
   DollarSign,
   BarChart3,
   UserCircle,
-  LogOut,
 } from "lucide-react";
 import api from "../services/api";
 import "./Layout.css";
 
 function BrandLogo() {
   return (
-    <div className="sidebar-brand-logo">
+    <div className="sidebar-brand-logo brand-logo">
       <div className="brand-symbol sidebar-brand-symbol">
-        <div className="flux-shape flux-shape-one"></div>
-        <div className="flux-shape flux-shape-two"></div>
-        <div className="flux-shape flux-shape-three"></div>
-
-        <div className="brand-bars">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+        <Activity className="brand-main-icon" size={28} strokeWidth={2.8} />
+        <BarChart3 className="brand-mini-icon" size={15} strokeWidth={3} />
       </div>
 
       <div className="brand-text sidebar-brand-text">
@@ -41,16 +34,12 @@ function BrandLogo() {
 }
 
 function Layout({ children }) {
-  const navigate = useNavigate();
-
   const [companies, setCompanies] = useState([]);
   const [toast, setToast] = useState(null);
 
   const [selectedCompanyId, setSelectedCompanyId] = useState(
     localStorage.getItem("selectedCompanyId") || ""
   );
-
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   async function loadCompanies() {
     try {
@@ -99,14 +88,6 @@ function Layout({ children }) {
     window.dispatchEvent(new Event("companyChanged"));
 
     showAppToast("success", "Empresa alterada com sucesso.");
-  }
-
-  function handleLogout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("selectedCompanyId");
-
-    navigate("/login");
   }
 
   useEffect(() => {
@@ -209,19 +190,6 @@ function Layout({ children }) {
           </NavLink>
         </nav>
 
-        <div className="sidebar-user-box">
-          <div className="sidebar-user-avatar">
-            {(user?.name || user?.email || "U").charAt(0).toUpperCase()}
-          </div>
-
-          <div className="sidebar-user-info">
-           
-          </div>
-        </div>
-
-        <button className="logout-button" onClick={handleLogout}>
-          
-        </button>
       </aside>
 
       <main className="main-content">

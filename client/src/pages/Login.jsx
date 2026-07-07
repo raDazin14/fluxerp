@@ -1,21 +1,15 @@
 import { useState } from "react";
+import { Activity, BarChart3 } from "lucide-react";
 import api from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
 
 function BrandLogo({ className = "" }) {
   return (
-    <div className={`brand-logo ${className}`}>
+    <div className={`brand-logo brand-logo-premium ${className}`}>
       <div className="brand-symbol">
-        <div className="flux-shape flux-shape-one"></div>
-        <div className="flux-shape flux-shape-two"></div>
-        <div className="flux-shape flux-shape-three"></div>
-
-        <div className="brand-bars">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+        <Activity className="brand-main-icon" size={28} strokeWidth={2.8} />
+        <BarChart3 className="brand-mini-icon" size={15} strokeWidth={3} />
       </div>
 
       <div className="brand-text">
