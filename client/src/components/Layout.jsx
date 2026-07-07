@@ -1,5 +1,19 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import {
+  LayoutDashboard,
+  Building2,
+  Package,
+  Users,
+  ShoppingCart,
+  Boxes,
+  ShoppingBag,
+  Tags,
+  DollarSign,
+  BarChart3,
+  UserCircle,
+  LogOut,
+} from "lucide-react";
 import api from "../services/api";
 import "./Layout.css";
 
@@ -118,57 +132,79 @@ function Layout({ children }) {
 
         <nav className="sidebar-nav">
           <NavLink to="/dashboard">
-            <span className="nav-icon nav-dashboard"></span>
+            <span className="nav-icon">
+              <LayoutDashboard size={19} strokeWidth={2.4} />
+            </span>
             Dashboard
           </NavLink>
 
           <NavLink to="/companies">
-            <span className="nav-icon nav-companies"></span>
+            <span className="nav-icon">
+              <Building2 size={19} strokeWidth={2.4} />
+            </span>
             Empresas
           </NavLink>
 
           <NavLink to="/products">
-            <span className="nav-icon nav-products"></span>
+            <span className="nav-icon">
+              <Package size={19} strokeWidth={2.4} />
+            </span>
             Produtos
           </NavLink>
 
           <NavLink to="/customers">
-            <span className="nav-icon nav-customers"></span>
+            <span className="nav-icon">
+              <Users size={19} strokeWidth={2.4} />
+            </span>
             Clientes
           </NavLink>
 
           <NavLink to="/sales">
-            <span className="nav-icon nav-sales"></span>
+            <span className="nav-icon">
+              <ShoppingCart size={19} strokeWidth={2.4} />
+            </span>
             Vendas
           </NavLink>
 
           <NavLink to="/stock">
-            <span className="nav-icon nav-stock"></span>
+            <span className="nav-icon">
+              <Boxes size={19} strokeWidth={2.4} />
+            </span>
             Estoque
           </NavLink>
 
           <NavLink to="/purchases">
-            <span className="nav-icon nav-purchases"></span>
+            <span className="nav-icon">
+              <ShoppingBag size={19} strokeWidth={2.4} />
+            </span>
             Compras
           </NavLink>
 
           <NavLink to="/categories">
-            <span className="nav-icon nav-categories"></span>
+            <span className="nav-icon">
+              <Tags size={19} strokeWidth={2.4} />
+            </span>
             Categorias
           </NavLink>
 
           <NavLink to="/financial">
-            <span className="nav-icon nav-financial"></span>
+            <span className="nav-icon">
+              <DollarSign size={19} strokeWidth={2.4} />
+            </span>
             Financeiro
           </NavLink>
 
           <NavLink to="/reports">
-            <span className="nav-icon nav-reports"></span>
+            <span className="nav-icon">
+              <BarChart3 size={19} strokeWidth={2.4} />
+            </span>
             Relatórios
           </NavLink>
 
           <NavLink to="/profile">
-            <span className="nav-icon nav-profile"></span>
+            <span className="nav-icon">
+              <UserCircle size={19} strokeWidth={2.4} />
+            </span>
             Perfil
           </NavLink>
         </nav>
@@ -179,13 +215,12 @@ function Layout({ children }) {
           </div>
 
           <div className="sidebar-user-info">
-            <strong>{user?.name || "Usuário"}</strong>
-            <span>Conta Ativa</span>
+           
           </div>
         </div>
 
         <button className="logout-button" onClick={handleLogout}>
-          Sair
+          
         </button>
       </aside>
 
