@@ -9,6 +9,7 @@ const stockRoutes = require("./routes/stockRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
 const financialRoutes = require("./routes/financialRoutes");
 const reportsRoutes = require("./routes/reportsRoutes");
+const purchaseRoutes = require("./routes/purchaseRoutes");
 
 require("dotenv").config();
 
@@ -31,6 +32,7 @@ app.use("/api/stock", stockRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/financial", financialRoutes);
 app.use("/api/reports", reportsRoutes);
+app.use("/api/purchases", purchaseRoutes);
 
 app.get("/", (req, res) => {
     res.json({

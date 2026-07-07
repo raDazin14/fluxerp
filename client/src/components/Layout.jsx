@@ -147,6 +147,11 @@ function Layout({ children }) {
             Estoque
           </NavLink>
 
+          <NavLink to="/purchases">
+            <span className="nav-icon nav-purchases"></span>
+            Compras
+          </NavLink>
+
           <NavLink to="/categories">
             <span className="nav-icon nav-categories"></span>
             Categorias

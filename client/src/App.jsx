@@ -14,6 +14,7 @@ import PrivateRoute from "./routes/PrivateRoute";
 import NotFound from "./pages/NotFound";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import Purchases from "./pages/Purchases";
 
 function App() {
   return (
@@ -74,6 +75,15 @@ function App() {
             <PrivateRoute>
               <Stock />
             </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/purchases"
+          element={
+             <PrivateRoute>
+               <Purchases />
+             </PrivateRoute>
           }
         />
 

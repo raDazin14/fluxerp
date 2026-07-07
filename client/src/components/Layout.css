@@ -820,3 +820,40 @@
 .sidebar-nav a.active .nav-profile::after {
   border-color: #ffffff;
 }
+
+.nav-purchases {
+  position: relative;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+}
+
+.nav-purchases::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 15px;
+  left: 50%;
+  top: 17px;
+  transform: translate(-50%, -50%);
+  border-radius: 4px;
+  border: 2px solid #e2e8f0;
+}
+
+.nav-purchases::after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 6px;
+  left: 50%;
+  top: 9px;
+  transform: translateX(-50%);
+  border-radius: 8px 8px 0 0;
+  border: 2px solid #e2e8f0;
+  border-bottom: 0;
+}
+
+.sidebar-nav a.active .nav-purchases::before,
+.sidebar-nav a.active .nav-purchases::after {
+  border-color: #ffffff;
+}
