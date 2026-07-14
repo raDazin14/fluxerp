@@ -354,3 +354,94 @@
   border-color: #635bff;
   box-shadow: 0 0 0 4px rgba(99, 91, 255, 0.12);
 }
+
+/* ===== Controle de estoque do produto ===== */
+
+.stock-control-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.stock-control-option {
+  min-height: 48px;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.stock-control-option:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.stock-control-option.active {
+  color: #ffffff;
+  border-color: rgba(99, 91, 255, 0.55);
+  background: linear-gradient(135deg, #635bff, #0ea5e9);
+  box-shadow:
+    0 14px 30px rgba(99, 91, 255, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.form-helper {
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+/* ===== Etiquetas da tabela ===== */
+
+.stock-free-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #ecfeff;
+  color: #0891b2;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.control-stock-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #f0fdf4;
+  color: #16a34a;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.no-stock-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 7px 11px;
+  border-radius: 999px;
+  background: #fff7ed;
+  color: #ea580c;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+/* ===== Ajuste mobile ===== */
+
+@media (max-width: 700px) {
+  .stock-control-options {
+    grid-template-columns: 1fr;
+  }
+}

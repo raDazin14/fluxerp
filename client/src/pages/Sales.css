@@ -483,3 +483,15 @@
     font-size: 28px;
   }
 }
+
+.free-sale-label {
+  display: inline-flex;
+  margin-left: 8px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #ecfeff;
+  color: #0891b2;
+  font-size: 10px;
+  font-weight: 950;
+  vertical-align: middle;
+}

@@ -8,7 +8,7 @@ async function createSale(req, res) {
 
     if (!company_id || !items || items.length === 0) {
       return res.status(400).json({
-        message: "Empresa e itens da venda são obrigatórios."
+        message: "Empresa e itens da venda são obrigatórios.",
       });
     }
 
@@ -19,7 +19,7 @@ async function createSale(req, res) {
 
     if (companyCheck.rows.length === 0) {
       return res.status(403).json({
-        message: "Empresa não encontrada ou sem permissão."
+        message: "Empresa não encontrada ou sem permissão.",
       });
     }
 
@@ -31,7 +31,7 @@ async function createSale(req, res) {
 
       if (customerCheck.rows.length === 0) {
         return res.status(400).json({
-          message: "Cliente não encontrado para esta empresa."
+          message: "Cliente não encontrado para esta empresa.",
         });
       }
     }
@@ -45,7 +45,13 @@ async function createSale(req, res) {
       const { product_id, quantity } = item;
 
       const productResult = await client.query(
-        `SELECT id, name, sale_price, cost_price, stock_quantity
+        `SELECT 
+            id,
+            name,
+            sale_price,
+            cost_price,
+            stock_quantity,
+            control_stock
          FROM products
          WHERE id = $1 AND company_id = $2`,
         [product_id, company_id]
@@ -56,27 +62,37 @@ async function createSale(req, res) {
       }
 
       const product = productResult.rows[0];
+      const itemQuantity = Number(quantity);
+      const controlStock = product.control_stock !== false;
 
-      if (Number(product.stock_quantity) < Number(quantity)) {
+      if (!itemQuantity || itemQuantity <= 0) {
+        throw new Error(`Quantidade inválida para o produto: ${product.name}`);
+      }
+
+      if (
+        controlStock &&
+        Number(product.stock_quantity || 0) < itemQuantity
+      ) {
         throw new Error(`Estoque insuficiente para o produto: ${product.name}`);
       }
 
-      const unitPrice = Number(product.sale_price);
+      const unitPrice = Number(product.sale_price || 0);
       const unitCost = Number(product.cost_price || 0);
-      const subtotal = unitPrice * Number(quantity);
-      const totalCost = unitCost * Number(quantity);
+      const subtotal = unitPrice * itemQuantity;
+      const totalCost = unitCost * itemQuantity;
       const profit = subtotal - totalCost;
 
       total += subtotal;
 
       saleItems.push({
         product_id,
-        quantity: Number(quantity),
+        quantity: itemQuantity,
         unit_price: unitPrice,
         unit_cost: unitCost,
         subtotal,
         total_cost: totalCost,
-        profit
+        profit,
+        control_stock: controlStock,
       });
     }
 
@@ -102,43 +118,39 @@ async function createSale(req, res) {
           item.unit_cost,
           item.subtotal,
           item.total_cost,
-          item.profit
+          item.profit,
         ]
       );
 
-      await client.query(
-        `UPDATE products
-         SET stock_quantity = stock_quantity - $1
-         WHERE id = $2`,
-        [item.quantity, item.product_id]
-      );
+      if (item.control_stock) {
+        await client.query(
+          `UPDATE products
+           SET stock_quantity = stock_quantity - $1
+           WHERE id = $2`,
+          [item.quantity, item.product_id]
+        );
 
-      await client.query(
-        `INSERT INTO stock_movements (company_id, product_id, type, quantity, reason)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [
-          company_id,
-          item.product_id,
-          "exit",
-          item.quantity,
-          `Venda #${sale.id}`
-        ]
-      );
+        await client.query(
+          `INSERT INTO stock_movements (company_id, product_id, type, quantity, reason)
+           VALUES ($1, $2, $3, $4, $5)`,
+          [company_id, item.product_id, "exit", item.quantity, `Venda #${sale.id}`]
+        );
+      }
     }
 
     await client.query("COMMIT");
 
     res.status(201).json({
       message: "Venda criada com sucesso.",
-      sale
+      sale,
     });
   } catch (error) {
     await client.query("ROLLBACK");
 
-    console.error(error);
+    console.error("Erro ao criar venda:", error);
 
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   } finally {
     client.release();
@@ -151,7 +163,7 @@ async function listSales(req, res) {
 
     if (!company_id) {
       return res.status(400).json({
-        message: "Informe o company_id."
+        message: "Informe o company_id.",
       });
     }
 
@@ -162,7 +174,7 @@ async function listSales(req, res) {
 
     if (companyCheck.rows.length === 0) {
       return res.status(403).json({
-        message: "Empresa não encontrada ou sem permissão."
+        message: "Empresa não encontrada ou sem permissão.",
       });
     }
 
@@ -177,10 +189,10 @@ async function listSales(req, res) {
 
     res.json(result.rows);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao listar vendas:", error);
 
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 }
@@ -200,12 +212,15 @@ async function getSaleById(req, res) {
 
     if (saleResult.rows.length === 0) {
       return res.status(404).json({
-        message: "Venda não encontrada."
+        message: "Venda não encontrada.",
       });
     }
 
     const itemsResult = await pool.query(
-      `SELECT si.*, p.name AS product_name
+      `SELECT 
+          si.*,
+          p.name AS product_name,
+          p.control_stock
        FROM sale_items si
        INNER JOIN products p ON p.id = si.product_id
        WHERE si.sale_id = $1`,
@@ -214,13 +229,13 @@ async function getSaleById(req, res) {
 
     res.json({
       sale: saleResult.rows[0],
-      items: itemsResult.rows
+      items: itemsResult.rows,
     });
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao buscar venda:", error);
 
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 }
@@ -228,5 +243,5 @@ async function getSaleById(req, res) {
 module.exports = {
   createSale,
   listSales,
-  getSaleById
+  getSaleById,
 };

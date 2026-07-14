@@ -20,6 +20,7 @@ function Products() {
     sale_price: "",
     stock_quantity: "",
     min_stock: "",
+    control_stock: true,
   });
 
   function getCompanyId() {
@@ -48,6 +49,7 @@ function Products() {
       sale_price: "",
       stock_quantity: "",
       min_stock: "",
+      control_stock: true,
     });
   }
 
@@ -77,6 +79,10 @@ function Products() {
       sale_price: product.sale_price || "",
       stock_quantity: product.stock_quantity || "",
       min_stock: product.min_stock || "",
+      control_stock:
+        product.control_stock === undefined || product.control_stock === null
+          ? true
+          : Boolean(product.control_stock),
     });
 
     setModalOpen(true);
@@ -145,8 +151,11 @@ function Products() {
         barcode: form.barcode.trim(),
         cost_price: Number(form.cost_price || 0),
         sale_price: Number(form.sale_price || 0),
-        stock_quantity: Number(form.stock_quantity || 0),
-        min_stock: Number(form.min_stock || 0),
+        stock_quantity: form.control_stock
+          ? Number(form.stock_quantity || 0)
+          : 0,
+        min_stock: form.control_stock ? Number(form.min_stock || 0) : 0,
+        control_stock: Boolean(form.control_stock),
       };
 
       if (editingProduct) {
@@ -249,6 +258,7 @@ function Products() {
                 <th align="left">Venda</th>
                 <th align="left">Estoque</th>
                 <th align="left">Mínimo</th>
+                <th align="left">Controle</th>
                 <th align="right">Ações</th>
               </tr>
             </thead>
@@ -283,10 +293,24 @@ function Products() {
                   </td>
 
                   <td>
-                    <span className="stock-pill">{product.stock_quantity}</span>
+                    {product.control_stock ? (
+                      <span className="stock-pill">
+                        {product.stock_quantity}
+                      </span>
+                    ) : (
+                      <span className="stock-free-pill">Livre</span>
+                    )}
                   </td>
 
-                  <td>{product.min_stock}</td>
+                  <td>{product.control_stock ? product.min_stock : "-"}</td>
+
+                  <td>
+                    {product.control_stock ? (
+                      <span className="control-stock-pill">Com estoque</span>
+                    ) : (
+                      <span className="no-stock-pill">Sem estoque</span>
+                    )}
+                  </td>
 
                   <td align="right">
                     <button
@@ -361,6 +385,50 @@ function Products() {
                   </div>
 
                   <div className="form-group full">
+                    <label>Controlar estoque?</label>
+
+                    <div className="stock-control-options">
+                      <button
+                        type="button"
+                        className={
+                          form.control_stock
+                            ? "stock-control-option active"
+                            : "stock-control-option"
+                        }
+                        onClick={() =>
+                          setForm({ ...form, control_stock: true })
+                        }
+                      >
+                        Sim, controlar estoque
+                      </button>
+
+                      <button
+                        type="button"
+                        className={
+                          !form.control_stock
+                            ? "stock-control-option active"
+                            : "stock-control-option"
+                        }
+                        onClick={() =>
+                          setForm({
+                            ...form,
+                            control_stock: false,
+                            stock_quantity: "",
+                            min_stock: "",
+                          })
+                        }
+                      >
+                        Não, vender livre
+                      </button>
+                    </div>
+
+                    <small className="form-helper">
+                      Use “Não” para serviços, produto feito na hora ou item que
+                      pode vender sem estoque cadastrado.
+                    </small>
+                  </div>
+
+                  <div className="form-group full">
                     <label>Descrição</label>
                     <input
                       placeholder="Ex: Café premium 250g"
@@ -419,32 +487,38 @@ function Products() {
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>Estoque</label>
-                    <input
-                      placeholder="0"
-                      type="number"
-                      value={form.stock_quantity}
-                      onChange={(e) =>
-                        setForm({
-                          ...form,
-                          stock_quantity: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
+                  {form.control_stock && (
+                    <>
+                      <div className="form-group">
+                        <label>Estoque</label>
+                        <input
+                          placeholder="0"
+                          type="number"
+                          step="0.001"
+                          value={form.stock_quantity}
+                          onChange={(e) =>
+                            setForm({
+                              ...form,
+                              stock_quantity: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
 
-                  <div className="form-group">
-                    <label>Estoque mínimo</label>
-                    <input
-                      placeholder="0"
-                      type="number"
-                      value={form.min_stock}
-                      onChange={(e) =>
-                        setForm({ ...form, min_stock: e.target.value })
-                      }
-                    />
-                  </div>
+                      <div className="form-group">
+                        <label>Estoque mínimo</label>
+                        <input
+                          placeholder="0"
+                          type="number"
+                          step="0.001"
+                          value={form.min_stock}
+                          onChange={(e) =>
+                            setForm({ ...form, min_stock: e.target.value })
+                          }
+                        />
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
 

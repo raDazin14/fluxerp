@@ -10,6 +10,7 @@ const dashboardRoutes = require("./routes/dashboardRoutes");
 const financialRoutes = require("./routes/financialRoutes");
 const reportsRoutes = require("./routes/reportsRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
+const financialTransactionRoutes = require("./routes/financialTransactionRoutes");
 
 require("dotenv").config();
 
@@ -33,6 +34,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/financial", financialRoutes);
 app.use("/api/reports", reportsRoutes);
 app.use("/api/purchases", purchaseRoutes);
+app.use("/api/financial-transactions", financialTransactionRoutes);
 
 app.get("/", (req, res) => {
     res.json({

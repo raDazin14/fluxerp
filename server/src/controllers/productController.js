@@ -13,6 +13,7 @@ async function createProduct(req, res) {
       sale_price,
       stock_quantity,
       min_stock,
+      control_stock,
     } = req.body;
 
     if (!company_id || !name) {
@@ -46,28 +47,46 @@ async function createProduct(req, res) {
       }
     }
 
+    const shouldControlStock =
+      control_stock === undefined || control_stock === null
+        ? true
+        : Boolean(control_stock);
+
     const result = await pool.query(
       `INSERT INTO products 
-       (company_id, category_id, name, description, sku, barcode, cost_price, sale_price, stock_quantity, min_stock)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+       (
+        company_id,
+        category_id,
+        name,
+        description,
+        sku,
+        barcode,
+        cost_price,
+        sale_price,
+        stock_quantity,
+        min_stock,
+        control_stock
+       )
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
        RETURNING *`,
       [
         company_id,
         category_id || null,
         name,
-        description,
-        sku,
-        barcode,
+        description || null,
+        sku || null,
+        barcode || null,
         cost_price || 0,
         sale_price || 0,
         stock_quantity || 0,
         min_stock || 0,
+        shouldControlStock,
       ]
     );
 
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao criar produto:", error);
 
     res.status(500).json({
       message: error.message,
@@ -109,7 +128,7 @@ async function listProducts(req, res) {
 
     res.json(result.rows);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao listar produtos:", error);
 
     res.status(500).json({
       message: error.message,
@@ -140,7 +159,7 @@ async function getProductById(req, res) {
 
     res.json(result.rows[0]);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao buscar produto:", error);
 
     res.status(500).json({
       message: error.message,
@@ -162,6 +181,7 @@ async function updateProduct(req, res) {
       sale_price,
       stock_quantity,
       min_stock,
+      control_stock,
     } = req.body;
 
     const productCheck = await pool.query(
@@ -194,6 +214,11 @@ async function updateProduct(req, res) {
       }
     }
 
+    const shouldControlStock =
+      control_stock === undefined || control_stock === null
+        ? true
+        : Boolean(control_stock);
+
     const result = await pool.query(
       `UPDATE products
        SET name = $1,
@@ -204,26 +229,28 @@ async function updateProduct(req, res) {
            sale_price = $6,
            stock_quantity = $7,
            min_stock = $8,
-           category_id = $9
-       WHERE id = $10
+           category_id = $9,
+           control_stock = $10
+       WHERE id = $11
        RETURNING *`,
       [
         name,
-        description,
-        sku,
-        barcode,
-        cost_price,
-        sale_price,
-        stock_quantity,
-        min_stock,
+        description || null,
+        sku || null,
+        barcode || null,
+        cost_price || 0,
+        sale_price || 0,
+        stock_quantity || 0,
+        min_stock || 0,
         category_id || null,
+        shouldControlStock,
         id,
       ]
     );
 
     res.json(result.rows[0]);
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao atualizar produto:", error);
 
     res.status(500).json({
       message: error.message,
@@ -255,7 +282,7 @@ async function deleteProduct(req, res) {
       message: "Produto excluído com sucesso.",
     });
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao excluir produto:", error);
 
     res.status(500).json({
       message: error.message,

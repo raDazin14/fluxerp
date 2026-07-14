@@ -107,7 +107,12 @@ function Sales() {
       return;
     }
 
-    if (Number(product.stock_quantity) < Number(quantity)) {
+    const productControlsStock = product.control_stock !== false;
+
+    if (
+      productControlsStock &&
+      Number(product.stock_quantity || 0) < Number(quantity)
+    ) {
       showToast("error", "Quantidade maior que o estoque disponível.");
       return;
     }
@@ -117,7 +122,10 @@ function Sales() {
     if (existingItem) {
       const newQuantity = existingItem.quantity + Number(quantity);
 
-      if (newQuantity > Number(product.stock_quantity)) {
+      if (
+        productControlsStock &&
+        newQuantity > Number(product.stock_quantity || 0)
+      ) {
         showToast(
           "error",
           "Quantidade total no carrinho passa do estoque disponível."
@@ -140,9 +148,10 @@ function Sales() {
         {
           product_id: product.id,
           name: product.name,
-          sale_price: Number(product.sale_price),
+          sale_price: Number(product.sale_price || 0),
           quantity: Number(quantity),
-          stock_quantity: Number(product.stock_quantity),
+          stock_quantity: Number(product.stock_quantity || 0),
+          control_stock: productControlsStock,
         },
       ]);
 
@@ -306,7 +315,10 @@ function Sales() {
 
                     {products.map((product) => (
                       <option key={product.id} value={product.id}>
-                        {product.name} — Estoque: {product.stock_quantity}
+                        {product.name} —{" "}
+                        {product.control_stock === false
+                          ? "Venda livre"
+                          : `Estoque: ${product.stock_quantity}`}
                       </option>
                     ))}
                   </select>
@@ -327,7 +339,11 @@ function Sales() {
                 <div className="selected-product-preview">
                   <div>
                     <strong>{selectedProduct.name}</strong>
-                    <span>Estoque disponível: {selectedProduct.stock_quantity}</span>
+                    <span>
+                      {selectedProduct.control_stock === false
+                        ? "Produto com venda livre"
+                        : `Estoque disponível: ${selectedProduct.stock_quantity}`}
+                    </span>
                   </div>
 
                   <strong>{money(selectedProduct.sale_price)}</strong>
@@ -360,6 +376,9 @@ function Sales() {
                       <strong>{item.name}</strong>
                       <span>
                         {item.quantity} x {money(item.sale_price)}
+                        {!item.control_stock && (
+                          <small className="free-sale-label">Venda livre</small>
+                        )}
                       </span>
                     </div>
 
